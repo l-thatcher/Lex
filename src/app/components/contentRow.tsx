@@ -86,10 +86,7 @@ interface MovieCardProps {
 const MovieCard = ({ movie }: MovieCardProps) => {
   const title = cleanTitle(movie.name);
   return (
-    <Link
-      href={`/${movie.id}?name=${encodeURIComponent(title)}`}
-      className="block"
-    >
+    <Link href={`/${movie.id}`} className="block">
       <div className="flex-shrink-0 w-40 h-60 bg-gray-800 rounded-lg overflow-hidden hover:scale-105 transition duration-300 ease-in-out cursor-pointer relative">
         <Image
           src={movie.thumbnail}

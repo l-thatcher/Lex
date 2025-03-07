@@ -5,19 +5,21 @@ import videojs from "video.js";
 import "video.js/dist/video-js.css";
 import "videojs-contrib-quality-levels";
 import "videojs-http-source-selector";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
 
 export default function VideoPlayer({
   params,
 }: {
-  params: Promise<{ videoId: string }>;
+  params: { videoId: string }; // Remove Promise
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<videojs.Player | null>(null);
   const [videoId, setVideoId] = useState<string | null>(null);
 
   useEffect(() => {
-    // Fetch the video ID from the params
-    params.then(({ videoId }) => setVideoId(videoId));
+    // Direct assignment instead of Promise handling
+    setVideoId(params.videoId);
   }, [params]);
 
   useEffect(() => {
@@ -87,6 +89,8 @@ export default function VideoPlayer({
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
+      <Navbar />
+
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 pt-12">
           {videoId.replace(/\./g, " ")}
@@ -103,6 +107,7 @@ export default function VideoPlayer({
           </p>
         </div>
       </main>
+      <Footer />
     </div>
   );
 }
