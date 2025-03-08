@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import ContentRow from "../components/contentRow";
-
+import Hero from "../components/hero";
 const TvShowsPage = () => {
   const [tvShows, setTvShows] = useState<Video[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,7 +27,8 @@ const TvShowsPage = () => {
   }
 
   return (
-    <div className="container mx-auto pb-4 pt-14">
+    <div className="bg-gray-900 pb-4 pt-14">
+      <Hero movies={tvShows} />
       <ContentRow title="TV Shows" movies={tvShows} />
     </div>
   );

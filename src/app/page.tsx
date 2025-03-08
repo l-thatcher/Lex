@@ -54,7 +54,7 @@ export default function Home() {
       </Head>
 
       <main className="pt-14">
-        <Hero />
+        <Hero movies={allVideos} />
 
         <ContentRow title="All Videos" movies={allVideos} />
         {films.length > 0 && <ContentRow title="Movies" movies={films} />}

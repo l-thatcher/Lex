@@ -14,6 +14,8 @@ export default function VideoPlayer({
 }: {
   params: { videoName: string };
 }) {
+  // Unwrap params with React.use() as recommended
+  const unwrappedParams = React.use(params);
   const searchParams = useSearchParams();
   const videoId = searchParams.get("id");
 
@@ -22,8 +24,9 @@ export default function VideoPlayer({
   const [videoName, setVideoName] = useState<string | null>(null);
 
   useEffect(() => {
-    setVideoName(params.videoName);
-  }, [params]);
+    // Use the unwrapped params
+    setVideoName(unwrappedParams.videoName);
+  }, [unwrappedParams]);
 
   useEffect(() => {
     if (!playerRef.current && videoRef.current && videoName) {
@@ -70,7 +73,7 @@ export default function VideoPlayer({
         playerRef.current = null;
       }
     };
-  }, [videoName]);
+  }, [videoName, videoId]);
 
   const toggleFullscreen = () => {
     if (playerRef.current) {

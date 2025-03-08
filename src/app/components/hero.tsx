@@ -8,84 +8,140 @@ interface Video {
   thumbnail: string;
 }
 
-const Hero: React.FC = () => {
+interface HeroProps {
+  movies: Video[];
+}
+
+const Hero: React.FC<HeroProps> = ({ movies }) => {
   const [currentMovie, setCurrentMovie] = useState(0);
-  const [videos, setVideos] = useState<Video[]>([]);
+  const [fade, setFade] = useState(true);
 
+  const movieCount = movies.length;
+
+  // Automatic slider change
   useEffect(() => {
-    const fetchAllVideos = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/api/videos");
-        const data = await response.json();
-        setVideos(data);
-      } catch (error) {
-        console.error("Error fetching videos:", error);
-      }
-    };
-
-    fetchAllVideos();
-  }, []);
-
-  useEffect(() => {
-    if (videos.length > 0) {
+    if (movieCount > 0) {
       const interval = setInterval(() => {
-        setCurrentMovie((prev) => (prev + 1) % videos.length);
+        handleNext();
       }, 10000); // Change hero every 10 seconds
-
       return () => clearInterval(interval);
     }
-  }, [videos]);
+  }, [movieCount, currentMovie]);
 
-  const movie = videos[currentMovie];
+  // Fade animation on slide change
+  useEffect(() => {
+    setFade(false);
+    const timeout = setTimeout(() => setFade(true), 50);
+    return () => clearTimeout(timeout);
+  }, [currentMovie]);
 
-  if (!movie) return null; // Prevent rendering before data is fetched
+  const handlePrev = () => {
+    setCurrentMovie((prev) => (prev - 1 + movieCount) % movieCount);
+  };
 
-  // Assuming you want to use the thumbnail as the hero image
-  // You might need to adjust the image URL or handling based on your API response
+  const handleNext = () => {
+    setCurrentMovie((prev) => (prev + 1) % movieCount);
+  };
+
+  const movie = movies[currentMovie];
+  if (!movie) return null;
+
   const heroImage = movie.thumbnail;
 
   return (
-    <div className="relative h-screen">
+    <div className="relative h-screen overflow-hidden">
+      {/* Semi-transparent overlay */}
       <div className="absolute inset-0 bg-black opacity-50 z-10"></div>
-      <Image
-        src={heroImage}
-        alt={movie.name}
-        layout="fill"
-        objectFit="cover"
-        className="w-full h-full object-cover"
-      />
-      <div className="absolute inset-0 flex items-center z-20">
-        <div className="ml-16 max-w-2xl">
+
+      {/* Hero image with fade animation */}
+      <div
+        key={movie.id}
+        className={`absolute inset-0 transition-opacity duration-1000 ${
+          fade ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <Image
+          src={heroImage}
+          alt={movie.name}
+          layout="fill"
+          objectFit="cover"
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      {/* Navigation and content */}
+      <div className="absolute inset-0 flex items-center justify-between z-20">
+        {/* Left navigation button */}
+        <button
+          onClick={handlePrev}
+          className="ml-4 p-2 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 text-white rounded-full transition"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+
+        {/* Hero text and action button */}
+        <div className="text-center">
           <h1 className="text-6xl font-bold mb-4 text-white">{movie.name}</h1>
-          {/* You might want to add a description or other details if available */}
-          <div className="flex space-x-4">
-            <Link href={`/${movie.name}`}>
-              <button className="bg-teal-500 hover:bg-teal-600 text-white py-2 px-6 rounded-full transition flex items-center">
-                <svg
-                  className="w-6 h-6 mr-2"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-                Play Now
-              </button>
-            </Link>
-          </div>
+          <Link href={`/${movie.name}?id=${movie.id}`}>
+            <button className="bg-teal-500 hover:bg-teal-600 text-white py-2 px-6 rounded-full transition flex items-center mx-auto">
+              <svg
+                className="w-6 h-6 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              Play Now
+            </button>
+          </Link>
         </div>
+
+        {/* Right navigation button */}
+        <button
+          onClick={handleNext}
+          className="mr-4 p-2 bg-gray-800 bg-opacity-50 hover:bg-opacity-75 text-white rounded-full transition"
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
       </div>
     </div>
   );
