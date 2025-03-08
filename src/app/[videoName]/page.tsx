@@ -7,23 +7,26 @@ import "videojs-contrib-quality-levels";
 import "videojs-http-source-selector";
 import Navbar from "../components/navbar";
 import Footer from "../components/footer";
+import { useSearchParams } from "next/navigation";
 
 export default function VideoPlayer({
   params,
 }: {
-  params: { videoId: string }; // Remove Promise
+  params: { videoName: string };
 }) {
+  const searchParams = useSearchParams();
+  const videoId = searchParams.get("id");
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const playerRef = useRef<videojs.Player | null>(null);
-  const [videoId, setVideoId] = useState<string | null>(null);
+  const [videoName, setVideoName] = useState<string | null>(null);
 
   useEffect(() => {
-    // Direct assignment instead of Promise handling
-    setVideoId(params.videoId);
+    setVideoName(params.videoName);
   }, [params]);
 
   useEffect(() => {
-    if (!playerRef.current && videoRef.current && videoId) {
+    if (!playerRef.current && videoRef.current && videoName) {
       // Video.js configuration
       const videoJsOptions = {
         autoplay: false,
@@ -67,7 +70,7 @@ export default function VideoPlayer({
         playerRef.current = null;
       }
     };
-  }, [videoId]);
+  }, [videoName]);
 
   const toggleFullscreen = () => {
     if (playerRef.current) {
@@ -79,7 +82,7 @@ export default function VideoPlayer({
     }
   };
 
-  if (!videoId) {
+  if (!videoName) {
     return (
       <div className="flex items-center justify-center h-screen bg-gray-900">
         <div className="text-teal-400 text-2xl">Loading...</div>
@@ -93,7 +96,7 @@ export default function VideoPlayer({
 
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 pt-12">
-          {videoId.replace(/\./g, " ")}
+          {videoName.replace(/\./g, " ")}
         </h1>
         <div className="relative aspect-video" onDoubleClick={toggleFullscreen}>
           <video ref={videoRef} className="video-js vjs-big-play-centered" />
@@ -101,13 +104,12 @@ export default function VideoPlayer({
         <div className="mt-6">
           <h2 className="text-xl font-semibold mb-2">Description</h2>
           <p className="text-gray-400">
-            Enjoy watching {videoId.replace(/\./g, " ")}. This video is streamed
-            using adaptive bitrate streaming for the best viewing experience.
-            Double-click the video to enter or exit fullscreen mode.
+            Enjoy watching {videoName.replace(/\./g, " ")}. This video is
+            streamed using adaptive bitrate streaming for the best viewing
+            experience. Double-click the video to enter or exit fullscreen mode.
           </p>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -49,8 +49,8 @@ const ContentRow = ({ title, movies }: ContentRowProps) => {
   }, []);
 
   return (
-    <div className="my-8 relative">
-      <h2 className="text-2xl font-semibold mb-4 ml-8">{title}</h2>
+    <div className="relative">
+      <h2 className="my-8 text-2xl font-semibold mb-4 ml-8">{title}</h2>
       <div
         ref={rowRef}
         className="flex space-x-4 overflow-x-auto px-8 scrollbar-hide"
@@ -86,7 +86,7 @@ interface MovieCardProps {
 const MovieCard = ({ movie }: MovieCardProps) => {
   const title = cleanTitle(movie.name);
   return (
-    <Link href={`/${movie.id}`} className="block">
+    <Link href={`/${movie.name}?id=${movie.id}`} className="block">
       <div className="flex-shrink-0 w-40 h-60 bg-gray-800 rounded-lg overflow-hidden hover:scale-105 transition duration-300 ease-in-out cursor-pointer relative">
         <Image
           src={movie.thumbnail}
@@ -95,7 +95,9 @@ const MovieCard = ({ movie }: MovieCardProps) => {
           objectFit="cover"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-          <h3 className="text-white text-sm font-semibold">{title}</h3>
+          <h3 className="text-white text-sm font-semibold">
+            {cleanTitle(movie.name)}
+          </h3>
         </div>
       </div>
     </Link>

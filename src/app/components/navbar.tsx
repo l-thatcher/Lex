@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
@@ -35,7 +36,7 @@ const Navbar: React.FC = () => {
             <div className="ml-10 flex items-baseline space-x-4">
               <NavLink href="/">Home</NavLink>
               <NavLink href="/tvshows">TV Shows</NavLink>
-              <NavLink href="/movies">Movies</NavLink>
+              <NavLink href="/films">Films</NavLink>
               <NavLink href="/mylist">My List</NavLink>
             </div>
           </div>

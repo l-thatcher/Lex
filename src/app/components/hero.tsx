@@ -59,7 +59,7 @@ const Hero: React.FC = () => {
           <h1 className="text-6xl font-bold mb-4 text-white">{movie.name}</h1>
           {/* You might want to add a description or other details if available */}
           <div className="flex space-x-4">
-            <Link href={`/${movie.id}`}>
+            <Link href={`/${movie.name}`}>
               <button className="bg-teal-500 hover:bg-teal-600 text-white py-2 px-6 rounded-full transition flex items-center">
                 <svg
                   className="w-6 h-6 mr-2"
@@ -84,9 +84,6 @@ const Hero: React.FC = () => {
                 Play Now
               </button>
             </Link>
-            <button className="bg-gray-800 hover:bg-gray-700 text-white py-2 px-6 rounded-full transition">
-              More Info
-            </button>
           </div>
         </div>
       </div>

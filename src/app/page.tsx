@@ -3,8 +3,6 @@ import Head from "next/head";
 import Hero from "./components/hero";
 import ContentRow from "./components/contentRow";
 import { useState, useEffect } from "react";
-import Navbar from "./components/navbar";
-import Footer from "./components/footer";
 import { Video } from "./types/Video"; // Adjust the import path as necessary
 
 export default function Home() {
@@ -54,15 +52,13 @@ export default function Home() {
         <title>ModernFlix - Stream Your Favorites</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Navbar />
 
       <main className="pt-14">
         <Hero />
 
         <ContentRow title="All Videos" movies={allVideos} />
-        <ContentRow title="Movies" movies={films} />
-        <ContentRow title="TV Shows" movies={tvShows} />
-        <Footer />
+        {films.length > 0 && <ContentRow title="Movies" movies={films} />}
+        {tvShows.length > 0 && <ContentRow title="TV Shows" movies={tvShows} />}
       </main>
     </div>
   );
